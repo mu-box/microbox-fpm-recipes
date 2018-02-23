@@ -1,0 +1,20 @@
+sudo: required
+
+env:
+  - PROJECT=narc
+  - PROJECT=libbframe
+  - PROJECT=libmsgxchng
+  - PROJECT=red
+  - PROJECT=redd
+
+services:
+  - docker
+
+before_install:
+  - sudo -H pip install awscli
+
+script:
+  - make ${PROJECT}
+
+after_success:
+  - make publish-${PROJECT}

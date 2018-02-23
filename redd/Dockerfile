@@ -2,6 +2,16 @@ FROM nanobox/fpm-cookery:ubuntu
 
 ARG REDD_VERSION
 ENV REDD_VERSION $REDD_VERSION
+ARG LIBBFRAME_VERSION
+ENV LIBBFRAME_VERSION $LIBBFRAME_VERSION
+ARG LIBMSGXCHNG_VERSION
+ENV LIBMSGXCHNG_VERSION $LIBMSGXCHNG_VERSION
+
+ADD https://d1qjolj82nwh57.cloudfront.net/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb /var/tmp
+ADD https://d1qjolj82nwh57.cloudfront.net/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb /var/tmp
+
+RUN dpkg -i /var/tmp/libbframe_${LIBBFRAME_VERSION}_amd64.deb
+RUN dpkg -i /var/tmp/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
 
 COPY recipe.rb /var/tmp
 
