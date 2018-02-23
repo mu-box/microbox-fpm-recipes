@@ -10,6 +10,8 @@ ENV LIBMSGXCHNG_VERSION $LIBMSGXCHNG_VERSION
 ADD https://d1qjolj82nwh57.cloudfront.net/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb /var/tmp
 ADD https://d1qjolj82nwh57.cloudfront.net/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb /var/tmp
 
+RUN apt-get install -y libmsgpack3
+
 RUN dpkg -i /var/tmp/libbframe_${LIBBFRAME_VERSION}_amd64.deb
 RUN dpkg -i /var/tmp/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
 
