@@ -12,9 +12,15 @@ services:
 
 before_install:
   - sudo -H pip install awscli
+  - export NARC_VERSION=$(curl -s https://api.github.com/repos/nanopack/narc/releases/latest -s | jq .name -r)
+  - export LIBBFRAME_VERSION=$(curl -s https://api.github.com/repos/nanobox-io/bframe-c/releases/latest -s | jq .name -r)
+  - export LIBMSGXCHNG_VERSION=$(curl -s https://api.github.com/repos/nanobox-io/msgxchng-c/releases/latest -s | jq .name -r)
+  - export RED_VERSION=$(curl -s https://api.github.com/repos/nanopack/red/releases/latest -s | jq .name -r)
+  - export REDD_VERSION=$(curl -s https://api.github.com/repos/nanopack/redd/releases/latest -s | jq .name -r)
 
 script:
   - make ${PROJECT}
 
 after_success:
-  - make publish-${PROJECT}
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - if [ "$BRANCH" == "master" ]; then make publish-${PROJECT}; else make publish-${PROJECT}-dryrun; fi

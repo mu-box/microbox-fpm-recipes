@@ -4,7 +4,7 @@ class Red < FPM::Cookery::Recipe
   revision ENV["RED_VERSION"][/([0-9.]+)-([0-9]+)/,2]
   # source   "https://#{GOPACKAGE}/archive/v#{version}.tar.gz"
   # source   "https://#{GOPACKAGE}/archive/master.tar.gz"
-  source   "https://github.com/nanopack/red.git", with: "git", branch: "master"
+  source   "https://github.com/nanopack/red.git", with: "git", tag: "v#{version}"
   # sha256   "bf27e7c0b9c8ac8f4533b86433cb89b0b8060e95e53d29e1fde7b9af34af1b96"
 
   description "Management utility for VXLANs"
