@@ -1,8 +1,3 @@
-NARC_VERSION=$(shell curl -s https://api.github.com/repos/nanopack/narc/releases/latest -s | jq .name -r)
-LIBBFRAME_VERSION=$(shell curl -s https://api.github.com/repos/nanobox-io/bframe-c/releases/latest -s | jq .name -r)
-LIBMSGXCHNG_VERSION=$(shell curl -s https://api.github.com/repos/nanobox-io/msgxchng-c/releases/latest -s | jq .name -r)
-RED_VERSION=$(shell curl -s https://api.github.com/repos/nanopack/red/releases/latest -s | jq .name -r)
-REDD_VERSION=$(shell curl -s https://api.github.com/repos/nanopack/redd/releases/latest -s | jq .name -r)
 LIBMSGPACK3_VERSION=0.5.9-1
 
 all: narc libbframe libmsgpack3-18.04 libmsgxchng libmsgxchng-18.04 red redd
