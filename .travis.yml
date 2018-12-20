@@ -3,7 +3,9 @@ sudo: required
 env:
   - PROJECT=narc
   - PROJECT=libbframe
+  - PROJECT=libmsgpack3-18.04
   - PROJECT=libmsgxchng
+  - PROJECT=libmsgxchng-18.04
   - PROJECT=red
   - PROJECT=redd
 
