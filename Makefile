@@ -1,10 +1,6 @@
-NARC_VERSION=0.2.2-1
-LIBBFRAME_VERSION=1.0.0-1
-LIBMSGXCHNG_VERSION=1.0.0-1
-RED_VERSION=1.0.0-1
-REDD_VERSION=1.0.0-1
+LIBMSGPACK3_VERSION=0.5.9-1
 
-all: narc libbframe libmsgxchng red redd
+all: narc libbframe libmsgpack3-18.04 libmsgxchng libmsgxchng-18.04 red redd
 
 pkg:
 	mkdir pkg
@@ -16,6 +12,11 @@ PHONY: ubuntu
 
 ubuntu:
 	docker build -t nanobox/fpm-cookery:ubuntu -f Dockerfiles/Dockerfile.ubuntu Dockerfiles
+
+PHONY: ubuntu-18.04
+
+ubuntu-18.04:
+	docker build -t nanobox/fpm-cookery:ubuntu-18.04 -f Dockerfiles/Dockerfile.ubuntu-18.04 Dockerfiles
 
 PHONY: narc-docker
 
@@ -32,7 +33,11 @@ pkg/deb/narc_${NARC_VERSION}_amd64.deb: pkg/deb narc-docker
 PHONY: publish-narc
 
 publish-narc: pkg/deb/narc_${NARC_VERSION}_amd64.deb
-	aws s3 cp pkg/deb/narc_${NARC_VERSION}_amd64.deb s3://nanopack.nanobox.io/deb/
+	aws s3 cp pkg/deb/narc_${NARC_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/narc_${NARC_VERSION}_amd64.deb
+
+publish-narc-dryrun: pkg/deb/narc_${NARC_VERSION}_amd64.deb
+	aws s3 cp pkg/deb/narc_${NARC_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun
 
 PHONY: libbframe-docker
 
@@ -49,7 +54,32 @@ pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb: pkg/deb libbframe-docker
 PHONY: publish-libbframe
 
 publish-libbframe: pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb
-	aws s3 cp pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb s3://nanopack.nanobox.io/deb/
+	aws s3 cp pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers 
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb
+
+publish-libbframe-dryrun: pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb
+	aws s3 cp pkg/deb/libbframe_${LIBBFRAME_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --dryrun
+
+PHONY: libmsgpack3-18.04-docker
+
+libmsgpack3-18.04-docker: ubuntu-18.04
+	docker build --build-arg LIBMSGPACK3_VERSION=${LIBMSGPACK3_VERSION} -t nanobox/fpm-cookery:libmsgpack3-18.04 -f libmsgpack3/Dockerfile-18.04 libmsgpack3
+
+PHONY: libmsgpack3-18.04
+
+libmsgpack3-18.04: pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb
+
+pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb: pkg/deb libmsgpack3-18.04-docker
+	docker run --rm nanobox/fpm-cookery:libmsgpack3-18.04 > pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb
+
+PHONY: publish-libmsgpack3-18.04
+
+publish-libmsgpack3-18.04: pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb
+	aws s3 cp pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb
+
+publish-libmsgpack3-18.04-dryrun: pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb
+	aws s3 cp pkg/deb/libmsgpack3_${LIBMSGPACK3_VERSION}_18.04_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun
 
 PHONY: libmsgxchng-docker
 
@@ -66,7 +96,32 @@ pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb: pkg/deb libmsgxchng-docker
 PHONY: publish-libmsgxchng
 
 publish-libmsgxchng: pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
-	aws s3 cp pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb s3://nanopack.nanobox.io/deb/
+	aws s3 cp pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
+
+publish-libmsgxchng-dryrun: pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
+	aws s3 cp pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun
+
+PHONY: libmsgxchng-18.04-docker
+
+libmsgxchng-18.04-docker: ubuntu-18.04
+	docker build --build-arg LIBMSGXCHNG_VERSION=${LIBMSGXCHNG_VERSION} -t nanobox/fpm-cookery:libmsgxchng-18.04 -f libmsgxchng/Dockerfile-18.04 libmsgxchng
+
+PHONY: libmsgxchng-18.04
+
+libmsgxchng-18.04: pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb
+
+pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb: pkg/deb libmsgxchng-18.04-docker
+	docker run --rm nanobox/fpm-cookery:libmsgxchng-18.04 > pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb
+
+PHONY: publish-libmsgxchng-18.04
+
+publish-libmsgxchng-18.04: pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb
+	aws s3 cp pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb
+
+publish-libmsgxchng-18.04-dryrun: pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb
+	aws s3 cp pkg/deb/libmsgxchng_${LIBMSGXCHNG_VERSION}_18.04_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun
 
 PHONY: red-docker
 
@@ -83,7 +138,11 @@ pkg/deb/red_${RED_VERSION}_amd64.deb: pkg/deb red-docker
 PHONY: publish-red
 
 publish-red: pkg/deb/red_${RED_VERSION}_amd64.deb
-	aws s3 cp pkg/deb/red_${RED_VERSION}_amd64.deb s3://nanopack.nanobox.io/deb/
+	aws s3 cp pkg/deb/red_${RED_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/red_${RED_VERSION}_amd64.deb
+
+publish-red-dryrun: pkg/deb/red_${RED_VERSION}_amd64.deb
+	aws s3 cp pkg/deb/red_${RED_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun
 
 PHONY: redd-docker
 
@@ -100,4 +159,8 @@ pkg/deb/redd_${REDD_VERSION}_amd64.deb: pkg/deb redd-docker
 PHONY: publish-redd
 
 publish-redd: pkg/deb/redd_${REDD_VERSION}_amd64.deb
-	aws s3 cp pkg/deb/redd_${REDD_VERSION}_amd64.deb s3://nanopack.nanobox.io/deb/
+	aws s3 cp pkg/deb/redd_${REDD_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+	aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths deb/redd_${REDD_VERSION}_amd64.deb
+
+publish-redd-dryrun: pkg/deb/redd_${REDD_VERSION}_amd64.deb
+	aws s3 cp pkg/deb/redd_${REDD_VERSION}_amd64.deb s3://${S3_BUCKET}/deb/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --dryrun

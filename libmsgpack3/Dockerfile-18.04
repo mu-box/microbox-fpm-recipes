@@ -1,0 +1,12 @@
+FROM nanobox/fpm-cookery:ubuntu-18.04
+
+ARG LIBMSGPACK3_VERSION
+ENV LIBMSGPACK3_VERSION $LIBMSGPACK3_VERSION
+
+RUN apt-get install -y gcc git autoconf libtool
+
+COPY recipe-18.04.rb /var/tmp/recipe.rb
+
+RUN cd /var/tmp; fpm-cook
+
+CMD cat /var/tmp/pkg/libmsgpack3_${LIBMSGPACK3_VERSION}_amd64.deb

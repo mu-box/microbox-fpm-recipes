@@ -1,0 +1,14 @@
+FROM nanobox/fpm-cookery:ubuntu-18.04
+
+ARG LIBMSGXCHNG_VERSION
+ENV LIBMSGXCHNG_VERSION $LIBMSGXCHNG_VERSION
+
+RUN apt-get -y install gcc git libmsgpack-dev autoconf libtool
+ADD https://d1qjolj82nwh57.cloudfront.net/deb/libmsgpack3_${LIBMSGPACK_VERSION}_18.04_amd64.deb /var/tmp
+RUN dpkg -i /var/tmp/libmsgpack3_${LIBMSGPACK_VERSION}_18.04_amd64.deb
+
+COPY recipe-18.04.rb /var/tmp/recipe.rb
+
+RUN cd /var/tmp; fpm-cook
+
+CMD cat /var/tmp/pkg/libmsgxchng_${LIBMSGXCHNG_VERSION}_amd64.deb
