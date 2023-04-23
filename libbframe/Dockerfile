@@ -1,4 +1,4 @@
-FROM nanobox/fpm-cookery:ubuntu
+FROM mubox/fpm-cookery:ubuntu
 
 ARG LIBBFRAME_VERSION
 ENV LIBBFRAME_VERSION $LIBBFRAME_VERSION

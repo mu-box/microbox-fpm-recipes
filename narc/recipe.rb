@@ -2,11 +2,11 @@ class Libbframe < FPM::Cookery::Recipe
   name     "narc"
   version  ENV["NARC_VERSION"][/([0-9.]+)-([0-9]+)/,1]
   revision ENV["NARC_VERSION"][/([0-9.]+)-([0-9]+)/,2]
-  source   "https://github.com/nanopack/narc.git", with: "git", tag: "v#{version}"
+  source   "https://github.com/mu-box/narc.git", with: "git", tag: "v#{version}"
   # sha256   "bf27e7c0b9c8ac8f4533b86433cb89b0b8060e95e53d29e1fde7b9af34af1b96"
 
   description "Log relay tool"
-  homepage    "https://github.com/nanopack/narc"
+  homepage    "https://github.com/mu-box/narc"
   maintainer  "Braxton Huggins <braxton@nanobox.io>"
   license     "MPL 2.0"
   # section     "development"

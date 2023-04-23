@@ -1,4 +1,4 @@
-FROM nanobox/fpm-cookery:ubuntu-18.04
+FROM mubox/fpm-cookery:ubuntu-18.04
 
 ARG LIBMSGPACK3_VERSION
 ENV LIBMSGPACK3_VERSION $LIBMSGPACK3_VERSION

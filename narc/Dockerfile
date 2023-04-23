@@ -1,4 +1,4 @@
-FROM nanobox/fpm-cookery:ubuntu
+FROM mubox/fpm-cookery:ubuntu
 
 ARG NARC_VERSION
 ENV NARC_VERSION $NARC_VERSION

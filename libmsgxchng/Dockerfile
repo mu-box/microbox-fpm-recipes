@@ -1,4 +1,4 @@
-FROM nanobox/fpm-cookery:ubuntu
+FROM mubox/fpm-cookery:ubuntu
 
 ARG LIBMSGXCHNG_VERSION
 ENV LIBMSGXCHNG_VERSION $LIBMSGXCHNG_VERSION
